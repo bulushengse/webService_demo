@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:jaxws="http://cxf.apache.org/jaxws"  
+    xmlns:soap="http://cxf.apache.org/bindings/soap"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd  
+        http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd">  
+    
+   <!--   
+   	  两种种配置方式
+     1.使用jaxws:endpoint标签的配置
+      
+      tomcat启动，访问http://localhost:8080/webService_CXF_demo/service成功 ，服务发布成功。
+	-->  
+   <jaxws:endpoint id="userService"   
+                   implementor="com.zbc.spring.cxf.server.service.impl.UserServiceImpl"   
+                   address="/user" > 
+         <!--拦截器,用来打印调用时的日志信息，也可以自定义拦截器   -->            
+        <jaxws:inInterceptors >  
+           <bean id="inMessageInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>    
+           <bean id="outLoggingInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>    
+        </jaxws:inInterceptors>  
+   </jaxws:endpoint>      
+     
+    <!-- 
+    	或者
+     
+     <bean id="userService"  class="com.zbc.spring.cxf.service.impl.UserServiceImpl"</bean>   
+
+     <jaxws:endpoint  implementor="#userService"    address="/user" /> 
+    
+     -->
+     
+    <!--
+      2.使用jaxws:server 标签的配置
+      相当于：JaxWsServerFactoryBean factory = new JaxWsServerFactoryBean();  
+     
+      -->
+ <jaxws:server address="/role" serviceClass="com.zbc.spring.cxf.server.service.impl.RoleServiceImpl">
+   			<!-- 可以引用spring容器中的bean -->
+   			<!-- <jaxws:serviceBean>
+   				<ref  bean="roleService">
+   			</jaxws:serviceBean>  -->
+   			
+   			<!-- 拦截器,用来打印调用时的日志信息     -->    
+     		<jaxws:inInterceptors>    
+				<bean class="org.apache.cxf.interceptor.LoggingInInterceptor"></bean> 
+            </jaxws:inInterceptors>      
+            <jaxws:outInterceptors>       
+				<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>    
+            </jaxws:outInterceptors> 
+    </jaxws:server>
+
+
+
+<!-- 
+	CXF3.0与SPRING的无缝整合时，为什么不用写CXF的配置文件cxf-servlet.xml？
+
+	spring核心监听器在项目启动的时候，会自动解析spring配置文件， 
+    并把spring配置文件中的配置元素【标签或者xml数据】放入到servlet作用域中
+
+	cxf的核心servlet也能在项目启动的时候自动解析spring配置文件，  
+    并把spring配置文件中的配置元素【标签或者xml数据】放入到servlet作用域中
+
+	也就是说spring核心监听器和cxf的核心servlet都能解析spring配置文件， 
+    而解析spring配置文件并放入servletcontext作用域中这个操作只用一次就行了。 
+    这个地方cxf和spirng整合的时候，我们选择让spring核心监听器来做此工作。  
+
+	而cxf的核心servlet只用去servletContext作用域中获取自己可以使用的xml数据就行了。
+
+	所以把cxf的相关配置信息写到spring的配置文件中就不需要再写一个cxf-servlet.cml文件了。 
+-->
+
+</beans>

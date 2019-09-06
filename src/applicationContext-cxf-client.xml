@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:jaxws="http://cxf.apache.org/jaxws"  
+    xmlns:soap="http://cxf.apache.org/bindings/soap"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd  
+        http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd">  
+    
+   <!--   
+   	 生成客户端代码3种方法
+   	 1.CXF的wsdl2java.bat工具。
+   	 下载cxf的jar包，下载地址http://archive.apache.org/dist/cxf/3.2.0/.zip   
+   	 配置环境变量，新建变量CXF_HOME=D:\DevelopmenteTools\apache-cxf-3.2.0，修改变量path添加%CXF_HOME%\bin
+   	 在apache-cxf-3.2.0的bin文件中，使用命令wsdl2java -encoding utf-8 -d E:\eclipse-workspace\webService_CXF_demo\src -client http://localhost:8080/webService_CXF_demo/service/user?wsdl
+     刷新项目，IUserService_UserServiceImplPort_Client.java测试
+     
+     2.JDK的wsimport.exe工具。
+	使用命令wsimport -encoding utf-8 -keep -s E:\eclipse-workspace\aaa\src http://localhost:8080/webService_CXF_demo/service/user?wsdl
+	刷新项目，编写测试代码。
+	
+    3.eclipse自带的工具。
+    新建java Project， 选中要导入客户端代码的java项目，右击new→Web Service Client，填写wsdl地址，点击完成。
+  
+	注:正常情况下，客户端要新建个项目，测试连接com.zbc.spring.cxf.server下的webservice服务
+	
+	package-info.java 中namespace的值必须是生成代码时的路径！！！
+	-->  
+	
+	<jaxws:client id="userServiceClient"
+	        address="http://localhost:8080/webService_CXF_demo/service/user"
+	        serviceClass="com.zbc.spring.cxf.client.service.IUserService" /> 
+	
+
+</beans>
